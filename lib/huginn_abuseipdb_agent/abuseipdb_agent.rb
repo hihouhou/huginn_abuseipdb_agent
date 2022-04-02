@@ -108,13 +108,27 @@ module Agents
 
     private
 
+    def log_curl_output(code,body)
+
+      log "request status : #{code}"
+
+      if interpolated['debug'] == 'true'
+        log "body"
+        log body
+      end
+
+      if interpolated['emit_events'] == 'true'
+        create_event payload: body
+      end
+
+    end
+
+
     def checkip()
 
       uri = URI.parse("https://api.abuseipdb.com/api/v2/check")
       params = JSON.parse(interpolated['data'])
       uri.query = URI.encode_www_form(params)
-      log uri.query
-      log uri
       request = Net::HTTP::Get.new(uri)
       request["Key"] = "#{interpolated['token']}"
       request["Accept"] = "application/json"
@@ -130,12 +144,8 @@ module Agents
         http.request(request)
       end
 
-      log "request status : #{response.code}"
+      log_curl_output(response.code,response.body)
 
-      if interpolated['debug'] == 'true'
-        log "response.body"
-        log response.body
-      end
     end
 
     def blacklist()
@@ -156,12 +166,8 @@ module Agents
         http.request(request)
       end
 
-      log "request status : #{response.code}"
+      log_curl_output(response.code,response.body)
 
-      if interpolated['debug'] == 'true'
-        log "response.body"
-        log response.body
-      end
     end
 
     def report()
@@ -184,12 +190,8 @@ module Agents
         http.request(request)
       end
 
-      log "request status : #{response.code}"
+      log_curl_output(response.code,response.body)
 
-      if interpolated['debug'] == 'true'
-        log "response.body"
-        log response.body
-      end
     end
 
     def check_block()
@@ -212,12 +214,8 @@ module Agents
         http.request(request)
       end
 
-      log "request status : #{response.code}"
+      log_curl_output(response.code,response.body)
 
-      if interpolated['debug'] == 'true'
-        log "response.body"
-        log response.body
-      end
     end
 
     def bulk_report()
@@ -238,12 +236,8 @@ module Agents
         http.request(request)
       end
 
-      log "request status : #{response.code}"
+      log_curl_output(response.code,response.body)
 
-      if interpolated['debug'] == 'true'
-        log "response.body"
-        log response.body
-      end
     end
 
     def clear_address()
@@ -263,12 +257,8 @@ module Agents
         http.request(request)
       end
 
-      log "request status : #{response.code}"
+      log_curl_output(response.code,response.body)
 
-      if interpolated['debug'] == 'true'
-        log "response.body"
-        log response.body
-      end
     end
 
     def trigger_action
